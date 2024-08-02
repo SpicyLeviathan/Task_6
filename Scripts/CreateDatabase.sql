@@ -66,7 +66,7 @@ MenuID integer NOT NULL,
 CONSTRAINT Catering_FK_1 FOREIGN KEY (CateringID) REFERENCES Catering(CateringID),
 CONSTRAINT Catering_FK_2 FOREIGN KEY (MenuID) REFERENCES Menu(MenuID));
 
-CREATE TABLE "EvemtDietaryRequirements" (
+CREATE TABLE "EventDietaryRequirements" (
 EvemtDietaryRequirementsID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 DietaryTypesID integer NOT NULL,
 CateringID integer NOT NULL,
