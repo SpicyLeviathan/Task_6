@@ -32,7 +32,8 @@ VALUES
 INSERT INTO AccountType (AccountTypeName)
 VALUES
 ('Catering_Staff'),
-('Users');
+('Users'),
+('NotActive');
 
 INSERT INTO Meals (MealName, MealPrice)
 VALUES
@@ -62,10 +63,12 @@ VALUES
 ('1','Alice','Smith','0412345678','alice.smith@gsg.wa.ed.au','alice.smith','Alice@1234'),
 ('2','Brian','Johnson','0498765432','brian.johnson@gsg.wa.ed.au','brian.johnson','Brian@1234'),
 ('2','Carol','Davis','0456789123','carol.davis@gsg.wa.ed.au','carol.davis','Carol@1234'),
+('3','Olivia','Miller','0456123789','olivia.miller@gsg.wa.ed.au','olivia.miller','Olivia@1234'),
 ('1','Daniel','Brown','0423456789','daniel.brown@gsg.wa.ed.au','daniel.brown','Daniel@1234'),
 ('2','Emma','Wilson','0434567890','emma.wilson@gsg.wa.ed.au','emma.wilson','Emma@1234'),
 ('2','Frank','Taylor','0487654321','frank.taylor@gsg.wa.ed.au','frank.taylor','Frank@1234'),
 ('2','Grace','Anderson','0445678901','grace.anderson@gsg.wa.ed.au','grace.anderson','Grace@1234'),
+('3','Noah','Harris','0491234567','noah.harris@gsg.wa.ed.au','noah.harris','Noah@1234'),
 ('1','Henry','Martinez','0478901234','henry.martinez@gsg.wa.ed.au','henry.martinez','Henry@1234'),
 ('2','Isabella','Thomas','0467890123','isabella.thomas@gsg.wa.ed.au','isabella.thomas','Isabella@1234'),
 ('2','Jack','Lee','0412340987','jack.lee@gsg.wa.ed.au','jack.lee','Jack@1234');

@@ -6,8 +6,8 @@ CREATE TABLE "Event" (
 EventID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 EventName text NOT NULL,
 NumberOfPeople text NOT NULL,
-"Date" date NOT NULL CHECK(LENGTH(Date) == 10),
-"Time" time NOT NULL CHECK(LENGTH(Time) == 5));
+"Date" date VARCHAR(10) NOT NULL,
+"Time" time VARCHAR(5) NOT NULL);
 
 CREATE TABLE "TypesOfCatering" (
 TypesOfCateringID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -31,7 +31,7 @@ UserID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 AccountTypeID integer NOT NULL,
 FirstName text NOT NULL,
 LastName text NOT NULL,
-PhoneNumber integer NOT NULL CHECK(LENGTH(PhoneNumber) == 10),
+PhoneNumber integer VARCHAR(10) NOT NULL,
 Email text NOT NULL,
 Username text NOT NULL,
 Password text NOT NULL,
@@ -39,10 +39,10 @@ CONSTRAINT User_FK_1 FOREIGN KEY (AccountTypeID) REFERENCES AccountType(AccountT
 
 CREATE TABLE "CardDetails" (
 CardID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-UserID Integer,
-CardNumber integer NOT NULL CHECK(LENGTH(CardNumber) == 16),
-ExpiryDate integer NOT NULL CHECK(LENGTH(ExpiryDate) == 4),
-CVV integer NOT NULL CHECK(LENGTH(CVV) == 3),
+UserID integer NULL,
+CardNumber integer VARCHAR(16) NOT NULL,
+ExpiryDate integer VARCHAR(4) NOT NULL,
+CVV integer VARCHAR(3) NOT NULL,
 CONSTRAINT CardDetails_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID));
 
 CREATE TABLE "Catering" (
