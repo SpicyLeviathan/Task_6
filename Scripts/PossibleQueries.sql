@@ -45,4 +45,37 @@ ON User.UserID = Catering.UserID
 INNER JOIN Event
 ON Event.EventID = Catering.EventID;
 
+SELECT
+	Menu.ItemName AS Item
+FROM Menu;
 
+SELECT
+	Event.EventName AS Event_Name, 
+	Menu.ItemName AS Item
+FROM Event
+INNER JOIN Catering
+ON Event.EventID = Catering.EventID  
+INNER JOIN EventMenu
+ON Catering.CateringID = EventMenu.CateringID 
+INNER JOIN Menu
+ON EventMenu.MenuID = Menu.MenuID
+WHERE Event.EventName = "Book_Fair"
+ORDER BY Event.EventName, Menu.ItemName;
+
+SELECT
+	DietaryTypes.DietaryTypesName AS Dietary_Types
+FROM DietaryTypes;
+
+SELECT
+	Event.EventName,
+	DietaryTypes.DietaryTypesName,
+	EventDietaryRequirements.Qty
+FROM Event
+JOIN Catering
+ON Event.EventID = Catering.EventID  
+JOIN EventDietaryRequirements
+ON Catering.CateringID = EventDietaryRequirements.CateringID 
+JOIN DietaryTypes
+ON EventDietaryRequirements.DietaryTypesID = DietaryTypes.DietaryTypesID
+WHERE DietaryTypes.DietaryTypesName = "Nut_Free"
+ORDER BY Event.EventName, DietaryTypes.DietaryTypesName, EventDietaryRequirements.Qty;
