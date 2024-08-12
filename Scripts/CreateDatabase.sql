@@ -26,6 +26,10 @@ CREATE TABLE "DietaryTypes" (
 DietaryTypesID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 DietaryTypesName text NOT NULL);
 
+CREATE TABLE "CardStatus" (
+CardStatusID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+CardStatusName text NOT NULL);
+
 CREATE TABLE "User" (
 UserID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 AccountTypeID integer NOT NULL,
@@ -43,7 +47,9 @@ UserID integer NULL,
 CardNumber integer VARCHAR(16) NOT NULL,
 ExpiryDate integer VARCHAR(4) NOT NULL,
 CVV integer VARCHAR(3) NOT NULL,
-CONSTRAINT CardDetails_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID));
+CardStatusID integer NOT NULL,
+CONSTRAINT CardDetails_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID)
+CONSTRAINT CardDetails_FK_2 FOREIGN KEY (CardStatusID) REFERENCES CardStatus(CardStatusID));
 
 CREATE TABLE "Catering" (
 CateringID integer PRIMARY KEY AUTOINCREMENT NOT NULL,

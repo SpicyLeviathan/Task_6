@@ -58,6 +58,11 @@ VALUES
 ('Organic'),
 ('Soy_Free');
 
+INSERT INTO CardStatus (CardStatusName)
+VALUES
+('Active'),
+('Inactive');
+
 INSERT INTO "User" (AccountTypeID, FirstName, LastName, PhoneNumber, Email, Username, Password)
 VALUES
 ('1','Alice','Smith','0412345678','alice.smith@gsg.wa.ed.au','alice.smith','Alice@1234'),
@@ -73,16 +78,19 @@ VALUES
 ('2','Isabella','Thomas','0467890123','isabella.thomas@gsg.wa.ed.au','isabella.thomas','Isabella@1234'),
 ('2','Jack','Lee','0412340987','jack.lee@gsg.wa.ed.au','jack.lee','Jack@1234');
 
-INSERT INTO CardDetails (UserID, CardNumber, ExpiryDate, CVV)
+INSERT INTO CardDetails (UserID, CardNumber, ExpiryDate, CVV, CardStatusID)
 VALUES
-('','4567123456789012','1225','123'),
-('2','1234567890123456','1126','456'),
-('3','2345678901234567','1024','789'),
-('5','3456789012345678','0927','101'),
-('6','4567890123456789','0823','202'),
-('7','5678901234567890','0728','303'),
-('9','6789012345678901','0622','404'),
-('10','7890123456789012','0529','505');
+('','4567123456789012','1225','123','1'),
+('2','1234567890123456','1126','456','1'),
+('3','2345678901234567','1024','789','1'),
+('5','3456789012345678','0927','101','1'),
+('6','4567890123456789','0823','202','1'),
+('7','5678901234567890','0728','303','1'),
+('9','6789012345678901','0622','404','1'),
+('10','7890123456789012','0529','505','1'),
+('2','4536123478901234','1125','567','2'),
+('6','4789123456012345','0526','789','2'),
+('9','4123456789012345','0923','901','2');
 
 INSERT INTO Catering (UserID, MealID, EventID, CardID, TypesOfCateringID, SpecificCateringRequests)
 VALUES
