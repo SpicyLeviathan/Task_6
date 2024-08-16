@@ -66,7 +66,7 @@ def log_in_window():
         font=standard_font,
         width=standard_width,
         height=standard_height,
-        command=lambda: main(button_type = ["login",username_entry.get(),password_entry.get(),"N/A","N/A"]))
+        command=lambda: main(button_type = ["login",username_entry.get(),password_entry.get(),"N/A"]))
     login_button.pack(pady=standard_y_padding)
 
     close_button = ctk.CTkButton(
@@ -78,24 +78,9 @@ def log_in_window():
         command=root.destroy)
     close_button.pack(pady=standard_y_padding)
 
-def display_user_password_window():
-    for widget in root.winfo_children():
-        widget.destroy()
-
-    display_password_label = ctk.CTkLabel(
-        root,
-        text="secret_question",
-        font=standard_font)
-    display_password_label.pack(pady=standard_y_padding)
-
-    close_button = ctk.CTkButton(
-        root,
-        text="Go Back to Login",
-        font=standard_font,
-        width=standard_width,
-        height=standard_height,
-        command=lambda:main(button_type=None))
-    close_button.pack(pady=standard_y_padding)
+def account_type_ID_retreval(username):
+    account_type_ID = str(connection.cursor().execute(f"SELECT UserID FROM User WHERE Username= '{username}'").fetchall()).replace("(","").replace(")","").replace("'","").replace(",","").replace("[",",").replace("]",",").replace(" ","")
+    return(account_type_ID)
 
 class ErrorWindow:
     def __init__(self,parent,message,on_close):
@@ -104,23 +89,22 @@ class ErrorWindow:
         self.on_close = on_close
 
     def create(self):
-        error_window = ctk.CTkToplevel(self.parent)
-        error_window.title("Error")
-        error_window.resizable(False, False)
-
+        for widget in root.winfo_children():
+            widget.destroy()
+        
         error_label = ctk.CTkLabel(
-            error_window,
+            self.parent,
             text=self.message,
             font=standard_font)
         error_label.pack(pady=standard_y_padding)
 
         close_button = ctk.CTkButton(
-            error_window,
+            self.parent,
             text="Close",
             font=standard_font,
             width=standard_width,
             height=standard_height,
-            command=lambda: [error_window.destroy(),self.on_close()])
+            command=lambda: main(button_type = None))
         close_button.pack(pady=standard_y_padding)
 
 class CredentialsChecker:
@@ -129,28 +113,43 @@ class CredentialsChecker:
         self.password = password
 
     def username_checker(self):
-        usernames = str(connection.cursor().execute("SELECT Username FROM Accounts").fetchall()).replace("(","").replace(")","").replace("'","").replace(",","").replace(" ",",")
-        if self.username not in usernames:
-            username_in_usernames = False
-            return username_in_usernames
-        else:
-            username_in_usernames = True
-            return username_in_usernames
-        
+        usernames = str(connection.cursor().execute("SELECT Username FROM User").fetchall()).replace("(","").replace(")","").replace("'","").replace(",","").replace("[","").replace("]","").replace(" ",",")
+        usernames = usernames.split(",")
+        username_in_usernames = False
+        for item in usernames:
+            print(item)
+            if self.username == item:
+                username_in_usernames = True
+                break
+        return username_in_usernames           
+            
+
+#        for item in usernames:
+#            print(item)
+#            print(self.username)
+#            if item == self.username:
+#                username_in_usernames = True
+#                return username_in_usernames
+#            else:
+#                username_in_usernames = False
+#                return username_in_usernames
+   
     def password_checker(self):
-        database_password = connection.cursor().execute(f"SELECT Password FROM Accounts WHERE Username= '{self.username}'").fetchone()[0]
+        database_password = connection.cursor().execute(f"SELECT Password FROM User WHERE Username= '{self.username}'").fetchone()[0]
+        print(database_password)
+        print(self.password)
         if self.password != database_password:
             correct_password = False
             return correct_password
         else:
             correct_password = True
             return correct_password
-    
-
 
 def main(button_type): 
     for widget in root.winfo_children():
         widget.destroy()
+
+    valid_login = False
 
     if button_type == None:
         log_in_window()
@@ -158,38 +157,29 @@ def main(button_type):
         button_value = button_type[0]
         username = button_type[1]
         password = button_type[2]
-        other_value_1 = button_type[3]
-        secret_question_entry = button_type[4]
-
-        print(button_type)
-        print(button_value)
-        print(username)
-        print(password)
-        print(other_value_1)
-        print(secret_question_entry)
 
         credentials_checker_1 = CredentialsChecker(username, password)
         credentials_checker_2 = CredentialsChecker(username, password)
         error_window_1 = ErrorWindow(root, "Your password or username was incorect.\nPlease go back and try again.", lambda: log_in_window())
         error_window_2 = ErrorWindow(root, "We encountered a problem, please try again.", lambda: log_in_window())
-        error_window_3 = ErrorWindow(root, "Your secret question answer was incorect.\nPlease go back and try again.", lambda: log_in_window())
 
         if button_value == "login":
             if credentials_checker_1.username_checker() == True:
                 if credentials_checker_2.password_checker() == True:
-                    print("yay1")
+                    valid_login = True
+
                 else:
                     error_window_1.create()
+                    print("username")
             else:
                 error_window_1.create()
+                print("password")
         else:
             error_window_2.create()
 
-
-
-
-
-
+    if valid_login == True:
+            account_type_ID = account_type_ID_retreval(username)
+            print(account_type_ID)
 
 if __name__ == "__main__":
     main(button_type = None)
