@@ -1,17 +1,17 @@
 {
 	"folders": {},
 	"connections": {
-		"sqlite_jdbc-1916a0deebe-7acd75bba3cee1b9": {
+		"sqlite_jdbc-190fc8e4752-3f4ca231dc07c1b1": {
 			"provider": "sqlite",
 			"driver": "sqlite_jdbc",
 			"name": "Task_6_Database.db",
 			"save-password": true,
 			"configuration": {
-				"database": "C:\\Users\\alecj\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\Task_6_Database.db",
-				"url": "jdbc:sqlite:C:\\Users\\alecj\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\Task_6_Database.db",
+				"database": "C:\\Users\\alecj\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\505_ACU_Q-Store_Database.db",
+				"url": "jdbc:sqlite:C:\\Users\\alecj\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\505_ACU_Q-Store_Database.db",
 				"configurationType": "MANUAL",
 				"type": "dev",
-				"closeIdleConnection": true,
+				"closeIdleConnection": false,
 				"auth-model": "native"
 			}
 		}
