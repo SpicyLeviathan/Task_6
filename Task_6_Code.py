@@ -395,123 +395,296 @@ def catterer_gui():
 
 
 
-def cattering_request():
-    
-    event_name_label = ctk.CTkLabel(root, text="Please enter event name:", fg_color="transparent", font= standard_font)
-    event_name_label.grid(row = 0, column = 0, sticky = W, pady = 10)
+def cattering_request(main_frame):
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+
+    event_name_label = ctk.CTkLabel(main_frame, text="Please enter event name:", fg_color="transparent", font= standard_font)
+    event_name_label.grid(row = 0, column = 0, pady = 10)
 
     event_name_entry = ctk.CTkEntry(
-        root, 
+        main_frame, 
         font= standard_font,
         width= standard_width,
         height= standard_height,
         )
-    event_name_entry.grid(row = 0, column = 1, sticky = W, pady = 10)
+    event_name_entry.grid(row = 0, column = 1, pady = 10)
 
-    number_of_people_label = ctk.CTkLabel(root, text="Please enter number of people:", fg_color="transparent", font= standard_font)
-    number_of_people_label.grid(row = 1, column = 0, sticky = W, pady = 10)
+    number_of_people_label = ctk.CTkLabel(main_frame, text="Please enter number of people:", fg_color="transparent", font= standard_font)
+    number_of_people_label.grid(row = 1, column = 0, pady = 10)
 
     number_of_people_entry = ctk.CTkEntry(
-        root, 
+        main_frame, 
         font= standard_font,
         width= standard_width,
         height= standard_height,
         )
-    number_of_people_entry.grid(row = 1, column = 1, sticky = W, pady = 10)
+    number_of_people_entry.grid(row = 1, column = 1, pady = 10)
 
     #Creating a label
-    date_label = ctk.CTkLabel(root, text="Select The Date Of The Event", fg_color="transparent", font= standard_font)
-    date_label.grid(row = 2, column = 0, sticky = W)
+    date_label = ctk.CTkLabel(main_frame, text="Select The Date Of The Event", fg_color="transparent", font= standard_font)
+    date_label.grid(row = 2, column = 0)
 
-    date_dropdown = ctk.CTkOptionMenu(master=root, values=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"])
-    date_dropdown.grid(row = 3, column = 0, sticky = W)
+    date_dropdown = ctk.CTkOptionMenu(master=main_frame, values=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"])
+    date_dropdown.grid(row = 3, column = 0)
     date_dropdown.set("Day")
 
-    month_dropdown = ctk.CTkOptionMenu(master=root, values=["01","02","03","04","05","06","07","08","09","10","11","12"])
-    month_dropdown.grid(row = 3, column = 1, sticky = W)
+    month_dropdown = ctk.CTkOptionMenu(master=main_frame, values=["01","02","03","04","05","06","07","08","09","10","11","12"])
+    month_dropdown.grid(row = 3, column = 1)
     month_dropdown.set("Month")
 
-    year_dropdown = ctk.CTkOptionMenu(master=root, values=["2024","2025","2026","2027","2028","2029","2030","2031","2032","2033","2034"])
-    year_dropdown.grid(row = 3, column = 2, sticky = W)
+    year_dropdown = ctk.CTkOptionMenu(master=main_frame, values=["2024","2025","2026","2027","2028","2029","2030","2031","2032","2033","2034"])
+    year_dropdown.grid(row = 3, column = 2)
     year_dropdown.set("Year")
 
     #Creating a label
-    time_label = ctk.CTkLabel(root, text="Enter The Time Of The Event", fg_color="transparent", font= standard_font)
-    time_label.grid(row = 4, column = 0, sticky = W, pady = 10)
+    time_label = ctk.CTkLabel(main_frame, text="Enter The Time Of The Event", fg_color="transparent", font= standard_font)
+    time_label.grid(row = 4, column = 0, pady = 10)
 
     time_entry = ctk.CTkEntry(
-        root, 
+        main_frame, 
         placeholder_text="HH:MM",
         font= standard_font,
         width= standard_width,
         height= standard_height,
         )
-    time_entry.grid(row = 4, column = 1, sticky = W, pady = 10)
+    time_entry.grid(row = 4, column = 1, pady = 10)
 
-    type_of_catering_label = ctk.CTkLabel(root, text="Select The Type Of Catering", fg_color="transparent", font= standard_font)
-    type_of_catering_label.grid(row = 5, column = 0, sticky = W, pady = 10)
+    type_of_catering_label = ctk.CTkLabel(main_frame, text="Select The Type Of Catering", fg_color="transparent", font= standard_font)
+    type_of_catering_label.grid(row = 5, column = 0, pady = 10)
 
-    type_of_catering_dropdown = ctk.CTkOptionMenu(master=root, values=["On Sight-Catering","Off Sight-Catering"])
-    type_of_catering_dropdown.grid(row = 5, column = 1, sticky = W, pady = 10)
+    type_of_catering_dropdown = ctk.CTkOptionMenu(master=main_frame, values=["On Sight-Catering","Off Sight-Catering"])
+    type_of_catering_dropdown.grid(row = 5, column = 1, pady = 10)
     type_of_catering_dropdown.set("On Sight-Catering")
 
-    cattering_for_label = ctk.CTkLabel(root, text="Catering For:", fg_color="transparent", font= standard_font)
-    cattering_for_label.grid(row = 6, column = 0, sticky = W, pady = 10)
+    cattering_for_label = ctk.CTkLabel(main_frame, text="Catering For:", fg_color="transparent", font= standard_font)
+    cattering_for_label.grid(row = 6, column = 0, pady = 10)
 
-    type_of_catering_dropdown = ctk.CTkOptionMenu(master=root, values=["Breakfast","Morning Tea","Lunch","Afternoon Tea","Dinner"])
-    type_of_catering_dropdown.grid(row = 6, column = 1, sticky = W, pady = 10)
+    type_of_catering_dropdown = ctk.CTkOptionMenu(master=main_frame, values=["Breakfast","Morning Tea","Lunch","Afternoon Tea","Dinner"])
+    type_of_catering_dropdown.grid(row = 6, column = 1, pady = 10)
     type_of_catering_dropdown.set("Breakfast")
 
-    cattering_requirements_label = ctk.CTkLabel(root, text="Special Catering Requirements:", fg_color="transparent", font= standard_font)
-    cattering_requirements_label.grid(row = 7, column = 0, sticky = W, pady = 10)
+    cattering_requirements_label = ctk.CTkLabel(main_frame, text="Special Catering Requirements:", fg_color="transparent", font= standard_font)
+    cattering_requirements_label.grid(row = 7, column = 0, pady = 10)
 
     cattering_requirements_entry = ctk.CTkEntry(
-        root, 
+        main_frame, 
         font= standard_font,
         width= standard_width,
         height= standard_height,
         )
     cattering_requirements_entry.grid(row = 7, column = 1, sticky = W, pady = 10)
 
+    #Creates a ctk label
+    label = ctk.CTkLabel(main_frame, text="Select An Item Then Click The Button Bellow \nThe Box To Add/Remove It From The Order \n\nFORMAT = MenuID, ItemName", fg_color="transparent", font= standard_font)
+    label.grid(row = 0, column = 3, pady = 10)
+
+    #Creating list box frame
+    listbox_frame= ctk.CTkFrame(main_frame, fg_color= "#292929")
+    listbox_frame.grid(row = 1, column = 3, pady = 10)
+
+    menu_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    cursor = connection.cursor()
+    data = cursor.execute("SELECT MenuID,ItemName FROM Menu").fetchall()
+    for row in data:
+        menu_listbox.insert(END, row)
+    menu_listbox.pack(side=LEFT)
+
+    listboxScrollbar= ctk.CTkScrollbar(listbox_frame, command=menu_listbox.yview)
+    listboxScrollbar.pack(side="right", fill=Y)
+    menu_listbox.config(yscrollcommand=listboxScrollbar.set)
+
     #Creating a button
-    view_event_button = ctk.CTkButton(
-        root,
-        text= "View Event Menu",
+    add_button = ctk.CTkButton(
+        main_frame,
+        text= "Add Item",
         font= standard_font,
         width= standard_width,
         height= standard_height,
-        command= lambda: event_menu(),
+        command= lambda: add_item_menu(menu_listbox,event_menu_listbox),
         )
-    view_event_button.pack(pady = standard_y_padding)
+    add_button.grid(row = 2, column = 3, pady = 10)
 
-def event_menu():
+    #Creates a ctk frame
+    listboxFrameTwo= ctk.CTkFrame(main_frame, fg_color= "#292929")
+    listboxFrameTwo.grid(row = 4, column = 3, pady = 10)
+
+    event_menu_listbox = Listbox(listboxFrameTwo, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    event_menu_listbox.pack(side=LEFT)
+
+    listboxScrollbar= ctk.CTkScrollbar(listboxFrameTwo, command=event_menu_listbox.yview)
+    listboxScrollbar.pack(side="right", fill=Y)
+    event_menu_listbox.config(yscrollcommand=listboxScrollbar.set)
+
+    #Creating a button
+    remove_button = ctk.CTkButton(
+        main_frame,
+        text= "Remove Item",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: remove_item_menu(menu_listbox,event_menu_listbox),
+        )
+    remove_button.grid(row = 5, column = 3, pady = 10)
+
+    #Creates a ctk label
+    label = ctk.CTkLabel(main_frame, text="Select An Item Then Click The Button Bellow \nThe Box To Add/Remove It From The Order \n\nFORMAT = DietaryTypesID, Name", fg_color="transparent", font= standard_font)
+    label.grid(row = 0, column = 4, pady = 10)
+
+    #Creating list box frame
+    listbox_frame= ctk.CTkFrame(main_frame, fg_color= "#292929")
+    listbox_frame.grid(row = 1, column = 4, pady = 10)
+
+    dietary_types_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    cursor = connection.cursor()
+    data = cursor.execute("SELECT DietaryTypesID,DietaryTypesName FROM DietaryTypes").fetchall()
+    for row in data:
+        dietary_types_listbox.insert(END, row)
+    dietary_types_listbox.pack(side=LEFT)
+
+    listboxScrollbar= ctk.CTkScrollbar(listbox_frame, command=dietary_types_listbox.yview)
+    listboxScrollbar.pack(side="right", fill=Y)
+    dietary_types_listbox.config(yscrollcommand=listboxScrollbar.set)
+
+    qty_entry = ctk.CTkEntry(
+        main_frame, 
+        placeholder_text="Please enter Qty",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        )
+    qty_entry.grid(row = 2, column = 4, pady = 10)
+
+    #Creating a button
+    add_button = ctk.CTkButton(
+        main_frame,
+        text= "Add Item",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: add_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry),
+        )
+    add_button.grid(row = 3, column = 4, pady = 10)
+
+    #Creates a ctk frame
+    listboxFrameTwo= ctk.CTkFrame(main_frame, fg_color= "#292929")
+    listboxFrameTwo.grid(row = 4, column = 4, pady = 10)
+
+    event_dietary_types_listbox = Listbox(listboxFrameTwo, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    event_dietary_types_listbox.pack(side=LEFT)
+
+    listboxScrollbar= ctk.CTkScrollbar(listboxFrameTwo, command=event_dietary_types_listbox.yview)
+    listboxScrollbar.pack(side="right", fill=Y)
+    event_dietary_types_listbox.config(yscrollcommand=listboxScrollbar.set)
+
+    #Creating a button
+    remove_button = ctk.CTkButton(
+        main_frame,
+        text= "Remove Item",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry),
+        )
+    remove_button.grid(row = 5, column = 4, pady = 10)
+
+    #Creating a button
+    confirm_button = ctk.CTkButton(
+        main_frame,
+        text= "Enter Request",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: confirm_request(),
+        )
+    confirm_button.grid(row = 3, column = 5, pady = 10)
+ 
+def add_item_menu(menu_listbox,event_menu_listbox):
+    selection = menu_listbox.curselection()
+
+    if selection:
+        item = str(menu_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
+
+        event_menu_listbox.insert(END, f"{item}")
+        menu_listbox.delete(selection[0])
+
+def remove_item_menu(menu_listbox,event_menu_listbox):
+    selection = event_menu_listbox.curselection()
+
+    if selection:
+        item = str(event_menu_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
+
+        menu_listbox.insert(END, f"{item}")
+        event_menu_listbox.delete(selection[0])
+
+def add_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry):
+    selection = dietary_types_listbox.curselection()
+
+    if selection:
+        qty = str(qty_entry.get())
+        item = str(dietary_types_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
+        item = item + " " + qty
+
+        event_dietary_types_listbox.insert(END, f"{item}")
+        dietary_types_listbox.delete(selection[0])
+
+def remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry):
+    selection = event_dietary_types_listbox.curselection()
+
+    if selection:
+        item = str(event_dietary_types_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
+        item = item.split(" ")
+        id = item[0]
+        item_name = item[1]
+        item = id + " " + item_name
+        dietary_types_listbox.insert(END, f"{item}")
+        event_dietary_types_listbox.delete(selection[0])
+
+def confirm_request():
     pass
 
-def view_menu():
+
+
+
+
+
+def view_menu(main_frame):
     pass
 
 def requester_gui():
     menu_bar = Menu(root)
     root.config(menu=menu_bar)
 
+    main_frame = ctk.CTkFrame(root)
+    main_frame.pack(fill="both", expand=True)
+    
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+    
     exit_menu = Menu(menu_bar)
     exit_menu.add_command(label='Exit', command=root.destroy)
     catering_menu = Menu(menu_bar)
-    catering_menu.add_command(label='Catering Requests', command= lambda: cattering_request())
+    catering_menu.add_command(label='Catering Requests', command= lambda: cattering_request(main_frame))
     menu_menu = Menu(menu_bar)
-    menu_menu.add_command(label='View Menu', command= lambda: view_menu())
+    menu_menu.add_command(label='View Menu', command= lambda: view_menu(main_frame))
    
     menu_bar.add_cascade(label="Exit", menu=exit_menu)
     menu_bar.add_cascade(label="Catering", menu=catering_menu)
     menu_bar.add_cascade(label="Menu", menu=menu_menu)
 
 def deactivated_account():
+    main_frame = ctk.CTkFrame(root)
+    main_frame.pack(fill="both", expand=True)
+    
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+
     #Creating a label
-    label = ctk.CTkLabel(root, text="Your account has been deactivated. \nPlease go talk to a catering staff member about the issue.", fg_color="transparent", font= standard_font)
+    label = ctk.CTkLabel(main_frame, text="Your account has been deactivated. \nPlease go talk to a catering staff member about the issue.", fg_color="transparent", font= standard_font)
     label.pack(pady = standard_y_padding)
 
     close_button = ctk.CTkButton(
-        root,
+        main_frame,
         text="Close Window",
         font=standard_font,
         width=standard_width,
