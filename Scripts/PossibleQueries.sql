@@ -88,8 +88,7 @@ WHERE Event.EventName = "Sports_Day"
 ORDER BY Event.EventName, DietaryTypes.DietaryTypesName, EventDietaryRequirements.Qty;
 
 SELECT
-	Catering.CateringID AS Catering_ID,
-	User.FirstName ||' '|| User.LastName AS Requester,
+	User.FirstName ||' '|| User.LastName AS User,
 	Meals.MealName AS Meal,
 	Event.EventName AS Event_Name,
 	Catering.CardID AS Card_ID,
@@ -103,5 +102,4 @@ ON Meals.MealID = Catering.MealID
 JOIN Event
 ON Event.EventID = Catering.EventID
 JOIN TypesOfCatering
-ON TypesOfCatering.TypesOfCateringID = Catering.TypesOfCateringID
-ORDER BY Catering_ID, Event_Name, Requester, Meal, Card_ID, Specific_Catering_Requests;
+ON TypesOfCatering.TypesOfCateringID = Catering.TypesOfCateringID;

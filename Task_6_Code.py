@@ -298,7 +298,7 @@ def select_event(left_frame,right_frame):
     events_listbox.config(yscrollcommand=listboxScrollbar.set) 
 
     #Creating a button
-    changeRankButton = ctk.CTkButton(
+    view_event_button = ctk.CTkButton(
         left_frame,
         text= "View Event Menu",
         font= standard_font,
@@ -306,7 +306,7 @@ def select_event(left_frame,right_frame):
         height= standard_height,
         command= lambda: show_event(right_frame,events_listbox),
         )
-    changeRankButton.pack(pady = standard_y_padding)
+    view_event_button.pack(pady = standard_y_padding)
 
 def show_event(right_frame,events_listbox):
     for widgets in right_frame.winfo_children():
@@ -362,7 +362,21 @@ def show_event(right_frame,events_listbox):
     events_treeview.config(yscrollcommand=treeviewScrollbarY.set)
     events_treeview.pack(side=RIGHT)
 
-def catterer_gui(left_frame,right_frame):
+def catterer_gui():
+    main_frame = ctk.CTkFrame(root)
+    main_frame.pack(fill="both", expand=True)
+    main_frame.rowconfigure(0, weight=1)
+    main_frame.columnconfigure(0, weight=1)
+    main_frame.columnconfigure(1, weight=5)
+    left_frame = ctk.CTkFrame(main_frame, fg_color="#292929")
+    left_frame.grid(row=0, column=0, sticky="nsew", padx=standard_x_padding)
+    left_frame.grid_propagate(False)
+    left_frame.pack_propagate(False)
+    right_frame = ctk.CTkFrame(main_frame, fg_color="#292929")
+    right_frame.grid(row=0, column=1, sticky="nsew", pady=standard_y_padding, padx=standard_x_padding)
+    right_frame.grid_propagate(False)
+    right_frame.pack_propagate(False)
+
     menu_bar = Menu(root)
     root.config(menu=menu_bar)
 
@@ -377,51 +391,127 @@ def catterer_gui(left_frame,right_frame):
     menu_bar.add_cascade(label="Exit", menu=exit_menu)
     menu_bar.add_cascade(label="Event", menu=events_menu)
 
-def requester_gui(left_frame,right_frame):
-    menu_bar = Menu(root)
-    root.config(menu=menu_bar)
-
-    exit_menu = Menu(menu_bar)
-    exit_menu.add_command(label='Exit', command=root.destroy)
-    events_menu = Menu(menu_bar)
-    events_menu.add_command(label='View All', command= lambda: events(left_frame,right_frame))
-    events_menu.add_command(label='Select Event', command= lambda: select_event(left_frame,right_frame))
-    events_menu.add_command(label='Event Menu', command= lambda: select_event_menu(left_frame,right_frame))
-    events_menu.add_command(label='Event Dietary Requirements', command= lambda: select_event_dietary_requirements(left_frame,right_frame))
-
-    menu_bar.add_cascade(label="Exit", menu=exit_menu)
-    menu_bar.add_cascade(label="Event", menu=events_menu)
 
 
 
 
+def cattering_request():
+    
+    event_name_label = ctk.CTkLabel(root, text="Please enter event name:", fg_color="transparent", font= standard_font)
+    event_name_label.grid(row = 0, column = 0, sticky = W, pady = 10)
 
+    event_name_entry = ctk.CTkEntry(
+        root, 
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        )
+    event_name_entry.grid(row = 0, column = 1, sticky = W, pady = 10)
 
+    number_of_people_label = ctk.CTkLabel(root, text="Please enter number of people:", fg_color="transparent", font= standard_font)
+    number_of_people_label.grid(row = 1, column = 0, sticky = W, pady = 10)
 
+    number_of_people_entry = ctk.CTkEntry(
+        root, 
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        )
+    number_of_people_entry.grid(row = 1, column = 1, sticky = W, pady = 10)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def deactivated_account(right_frame):
     #Creating a label
-    label = ctk.CTkLabel(right_frame, text="Your account has been deactivated. \nPlease go talk to a catering staff member about the issue.", fg_color="transparent", font= standard_font)
+    date_label = ctk.CTkLabel(root, text="Select The Date Of The Event", fg_color="transparent", font= standard_font)
+    date_label.grid(row = 2, column = 0, sticky = W)
+
+    date_dropdown = ctk.CTkOptionMenu(master=root, values=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"])
+    date_dropdown.grid(row = 3, column = 0, sticky = W)
+    date_dropdown.set("Day")
+
+    month_dropdown = ctk.CTkOptionMenu(master=root, values=["01","02","03","04","05","06","07","08","09","10","11","12"])
+    month_dropdown.grid(row = 3, column = 1, sticky = W)
+    month_dropdown.set("Month")
+
+    year_dropdown = ctk.CTkOptionMenu(master=root, values=["2024","2025","2026","2027","2028","2029","2030","2031","2032","2033","2034"])
+    year_dropdown.grid(row = 3, column = 2, sticky = W)
+    year_dropdown.set("Year")
+
+    #Creating a label
+    time_label = ctk.CTkLabel(root, text="Enter The Time Of The Event", fg_color="transparent", font= standard_font)
+    time_label.grid(row = 4, column = 0, sticky = W, pady = 10)
+
+    time_entry = ctk.CTkEntry(
+        root, 
+        placeholder_text="HH:MM",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        )
+    time_entry.grid(row = 4, column = 1, sticky = W, pady = 10)
+
+    type_of_catering_label = ctk.CTkLabel(root, text="Select The Type Of Catering", fg_color="transparent", font= standard_font)
+    type_of_catering_label.grid(row = 5, column = 0, sticky = W, pady = 10)
+
+    type_of_catering_dropdown = ctk.CTkOptionMenu(master=root, values=["On Sight-Catering","Off Sight-Catering"])
+    type_of_catering_dropdown.grid(row = 5, column = 1, sticky = W, pady = 10)
+    type_of_catering_dropdown.set("On Sight-Catering")
+
+    cattering_for_label = ctk.CTkLabel(root, text="Catering For:", fg_color="transparent", font= standard_font)
+    cattering_for_label.grid(row = 6, column = 0, sticky = W, pady = 10)
+
+    type_of_catering_dropdown = ctk.CTkOptionMenu(master=root, values=["Breakfast","Morning Tea","Lunch","Afternoon Tea","Dinner"])
+    type_of_catering_dropdown.grid(row = 6, column = 1, sticky = W, pady = 10)
+    type_of_catering_dropdown.set("Breakfast")
+
+    cattering_requirements_label = ctk.CTkLabel(root, text="Special Catering Requirements:", fg_color="transparent", font= standard_font)
+    cattering_requirements_label.grid(row = 7, column = 0, sticky = W, pady = 10)
+
+    cattering_requirements_entry = ctk.CTkEntry(
+        root, 
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        )
+    cattering_requirements_entry.grid(row = 7, column = 1, sticky = W, pady = 10)
+
+    #Creating a button
+    view_event_button = ctk.CTkButton(
+        root,
+        text= "View Event Menu",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: event_menu(),
+        )
+    view_event_button.pack(pady = standard_y_padding)
+
+def event_menu():
+    pass
+
+def view_menu():
+    pass
+
+def requester_gui():
+    menu_bar = Menu(root)
+    root.config(menu=menu_bar)
+
+    exit_menu = Menu(menu_bar)
+    exit_menu.add_command(label='Exit', command=root.destroy)
+    catering_menu = Menu(menu_bar)
+    catering_menu.add_command(label='Catering Requests', command= lambda: cattering_request())
+    menu_menu = Menu(menu_bar)
+    menu_menu.add_command(label='View Menu', command= lambda: view_menu())
+   
+    menu_bar.add_cascade(label="Exit", menu=exit_menu)
+    menu_bar.add_cascade(label="Catering", menu=catering_menu)
+    menu_bar.add_cascade(label="Menu", menu=menu_menu)
+
+def deactivated_account():
+    #Creating a label
+    label = ctk.CTkLabel(root, text="Your account has been deactivated. \nPlease go talk to a catering staff member about the issue.", fg_color="transparent", font= standard_font)
     label.pack(pady = standard_y_padding)
 
     close_button = ctk.CTkButton(
-        right_frame,
+        root,
         text="Close Window",
         font=standard_font,
         width=standard_width,
@@ -486,7 +576,8 @@ def main(button_type):
 
     if button_type == None:
         log_in_window()
-    else:    
+    else:
+        global username
         button_value = button_type[0]
         username = button_type[1]
         password = button_type[2]
@@ -513,26 +604,13 @@ def main(button_type):
         screen_height = root.winfo_screenheight()
         root.geometry(f"{screen_width}x{screen_height}")
         root.resizable(True, True)
-        main_frame = ctk.CTkFrame(root)
-        main_frame.pack(fill="both", expand=True)
-        main_frame.rowconfigure(0, weight=1)
-        main_frame.columnconfigure(0, weight=1)
-        main_frame.columnconfigure(1, weight=5)
-        left_frame = ctk.CTkFrame(main_frame, fg_color="#292929")
-        left_frame.grid(row=0, column=0, sticky="nsew", padx=standard_x_padding)
-        left_frame.grid_propagate(False)
-        left_frame.pack_propagate(False)
-        right_frame = ctk.CTkFrame(main_frame, fg_color="#292929")
-        right_frame.grid(row=0, column=1, sticky="nsew", pady=standard_y_padding, padx=standard_x_padding)
-        right_frame.grid_propagate(False)
-        right_frame.pack_propagate(False)
 
         if account_type_ID == 1:
-            catterer_gui(left_frame,right_frame)
+            catterer_gui()
         elif account_type_ID == 2:
-            requester_gui(left_frame,right_frame)
+            requester_gui()
         else:
-            deactivated_account(right_frame)
+            deactivated_account()
     
 if __name__ == "__main__":
     main(button_type = None)
