@@ -7,11 +7,10 @@
 			"name": "Task_6_Database.db",
 			"save-password": true,
 			"configuration": {
-				"database": "C:\\Users\\alecj\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\Task_6_Database.db",
-				"url": "jdbc:sqlite:C:\\Users\\alecj\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\Task_6_Database.db",
+				"database": "C:\\Users\\alec.mcdonald\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\Task_6_Database.db",
+				"url": "jdbc:sqlite:C:\\Users\\alec.mcdonald\\OneDrive - Great Southern Grammar\\.Year 12\\Computer Science\\Task_6\\Task_6_Database.db",
 				"configurationType": "MANUAL",
 				"type": "dev",
-				"closeIdleConnection": true,
 				"auth-model": "native"
 			}
 		}
@@ -25,11 +24,9 @@
 			"confirm-execute": false,
 			"confirm-data-change": false,
 			"smart-commit": false,
-			"smart-commit-recover": true,
+			"smart-commit-recover": false,
 			"auto-close-transactions": true,
-			"close-transactions-period": 1800,
-			"auto-close-connections": true,
-			"close-connections-period": 14400
+			"close-transactions-period": 1800
 		}
 	}
 }

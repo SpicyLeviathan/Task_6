@@ -403,6 +403,7 @@ def cattering_request(left_frame,middle_frame,right_frame):
         height= standard_height,
         )
     event_name_entry.grid(row = 0, column = 1, pady = 10)
+    event_name_entry.grid(row = 0, column = 1, pady = 10)
 
     number_of_people_label = ctk.CTkLabel(left_frame, text="Please enter number of people:", fg_color="transparent", font= standard_font)
     number_of_people_label.grid(row = 1, column = 0, pady = 10)
@@ -413,6 +414,7 @@ def cattering_request(left_frame,middle_frame,right_frame):
         width= standard_width,
         height= standard_height,
         )
+    number_of_people_entry.grid(row = 1, column = 1, pady = 10)
     number_of_people_entry.grid(row = 1, column = 1, pady = 10)
 
     #Creating a label
@@ -753,11 +755,19 @@ def deactivated_account():
     for widget in main_frame.winfo_children():
         widget.destroy()
 
+    main_frame = ctk.CTkFrame(root)
+    main_frame.pack(fill="both", expand=True)
+    
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+
     #Creating a label
+    label = ctk.CTkLabel(main_frame, text="Your account has been deactivated. \nPlease go talk to a catering staff member about the issue.", fg_color="transparent", font= standard_font)
     label = ctk.CTkLabel(main_frame, text="Your account has been deactivated. \nPlease go talk to a catering staff member about the issue.", fg_color="transparent", font= standard_font)
     label.pack(pady = standard_y_padding)
 
     close_button = ctk.CTkButton(
+        main_frame,
         main_frame,
         text="Close Window",
         font=standard_font,
