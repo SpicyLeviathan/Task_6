@@ -1,7 +1,7 @@
 {
 	"folders": {},
 	"connections": {
-		"sqlite_jdbc-1916a0deebe-7acd75bba3cee1b9": {
+		"sqlite_jdbc-19172a37a56-218162cc782096f2": {
 			"provider": "sqlite",
 			"driver": "sqlite_jdbc",
 			"name": "Task_6_Database.db",
