@@ -473,7 +473,7 @@ def cattering_request(left_frame,middle_frame,right_frame):
         )
     cattering_requirements_entry.grid(row = 8, column = 1, sticky = W, pady = 10)
 
-        #Creating a button
+    #Creating a button
     confirm_button = ctk.CTkButton(
         left_frame,
         text= "Enter Request",
