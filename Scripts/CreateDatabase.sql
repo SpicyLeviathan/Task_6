@@ -1,82 +1,82 @@
-CREATE TABLE "Menu" (
-MenuID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-ItemName text NOT NULL);
+CREATE TABLE "Menu" ( /* Creates a table with the name that is inside the "" */
+MenuID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+ItemName text NOT NULL); /* Creates a row that is an integer and is not null */
 
-CREATE TABLE "Event" (
-EventID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-EventName text NOT NULL,
-NumberOfPeople text NOT NULL,
-"Date" date VARCHAR(10) NOT NULL,
-"Time" time VARCHAR(5) NOT NULL);
+CREATE TABLE "Event" ( /* Creates a table with the name that is inside the "" */
+EventID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+EventName text NOT NULL, /* Creates a row that is a text and is not null */
+NumberOfPeople text NOT NULL, /* Creates a row that is a text and is not null */
+"Date" date(10) NOT NULL, /* Creates a row that is a date with max of 10 characters and is not null */
+"Time" time(5) NOT NULL); /* Creates a row that is a time with max of 5 characters and is not null */
 
-CREATE TABLE "TypesOfCatering" (
-TypesOfCateringID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-TypesOfCateringName text NOT NULL);
+CREATE TABLE "TypesOfCatering" ( /* Creates a table with the name that is inside the "" */
+TypesOfCateringID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+TypesOfCateringName text NOT NULL); /* Creates a row that is a text and is not null */
 
-CREATE TABLE "AccountType" (
-AccountTypeID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-AccountTypeName text NOT NULL);
+CREATE TABLE "AccountType" ( /* Creates a table with the name that is inside the "" */
+AccountTypeID integer PRIMARY KEY AUTOINCREMENT NOT NULL,  /* Creates a primary key that is an integer, autoicrements and in not null */
+AccountTypeName text NOT NULL); /* Creates a row that is a text and is not null */
 
-CREATE TABLE "Meals" (
-MealID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-MealName text NOT NULL,
-MealPrice float NOT NULL);
+CREATE TABLE "Meals" ( /* Creates a table with the name that is inside the "" */
+MealID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+MealName text NOT NULL, /* Creates a row that is a text and is not null */
+MealPrice float NOT NULL); /* Creates a row that is a float and is not null */
 
-CREATE TABLE "DietaryTypes" (
-DietaryTypesID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-DietaryTypesName text NOT NULL);
+CREATE TABLE "DietaryTypes" ( /* Creates a table with the name that is inside the "" */
+DietaryTypesID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+DietaryTypesName text NOT NULL); /* Creates a row that is a text and is not null */
 
-CREATE TABLE "CardStatus" (
-CardStatusID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-CardStatusName text NOT NULL);
+CREATE TABLE "CardStatus" ( /* Creates a table with the name that is inside the "" */
+CardStatusID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+CardStatusName text NOT NULL); /* Creates a row that is a text and is not null */
 
-CREATE TABLE "User" (
-UserID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-AccountTypeID integer NOT NULL,
-FirstName text NOT NULL,
-LastName text NOT NULL,
-PhoneNumber integer VARCHAR(10) NOT NULL,
-Email text NOT NULL,
-Username text NOT NULL,
-Password text NOT NULL,
-CONSTRAINT User_FK_1 FOREIGN KEY (AccountTypeID) REFERENCES AccountType(AccountTypeID));
+CREATE TABLE "User" ( /* Creates a table with the name that is inside the "" */
+UserID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+AccountTypeID integer NOT NULL, /* Creates a row that is an integer and is not null */
+FirstName text NOT NULL, /* Creates a row that is a text and is not null */
+LastName text NOT NULL, /* Creates a row that is a text and is not null */
+PhoneNumber integer(10) NOT NULL, /* Creates a row that is an integer with max of 10 characters and is not null */
+Email text NOT NULL, /* Creates a row that is a text and is not null */
+Username text NOT NULL, /* Creates a row that is a text and is not null */
+Password text NOT NULL, /* Creates a row that is a text and is not null */
+CONSTRAINT User_FK_1 FOREIGN KEY (AccountTypeID) REFERENCES AccountType(AccountTypeID)); /* Sets a foreign key */
 
-CREATE TABLE "CardDetails" (
-CardID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-UserID integer NULL,
-CardNumber integer VARCHAR(16) NOT NULL,
-ExpiryDate integer VARCHAR(4) NOT NULL,
-CVV integer VARCHAR(3) NOT NULL,
-CardStatusID integer NOT NULL,
-CONSTRAINT CardDetails_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID)
-CONSTRAINT CardDetails_FK_2 FOREIGN KEY (CardStatusID) REFERENCES CardStatus(CardStatusID));
+CREATE TABLE "CardDetails" ( /* Creates a table with the name that is inside the "" */
+CardID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+UserID integer NULL, /* Creates a row that is an integer and can be null */
+CardNumber integer(16) NOT NULL, /* Creates a row that is an integer with max of 16 characters and is not null */
+ExpiryDate integer(4) NOT NULL, /* Creates a row that is an integer with max of 4 characters and is not null */
+CVV integer(3) NOT NULL, /* Creates a row that is an integer with max of 3 characters and is not null */
+CardStatusID integer NOT NULL, /* Creates a row that is an integer and is not null */
+CONSTRAINT CardDetails_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID) /* Sets a foreign key */
+CONSTRAINT CardDetails_FK_2 FOREIGN KEY (CardStatusID) REFERENCES CardStatus(CardStatusID)); /* Sets a foreign key */
 
-CREATE TABLE "Catering" (
-CateringID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-UserID integer NOT NULL,
-MealID integer NOT NULL,
-EventID integer NOT NULL,
-CardID integer NOT NULL,
-TypesOfCateringID integer NOT NULL,
-SpecificCateringRequests text NOT NULL,
-CONSTRAINT Catering_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID),
-CONSTRAINT Catering_FK_2 FOREIGN KEY (MealID) REFERENCES Meals(MealID),
-CONSTRAINT Catering_FK_3 FOREIGN KEY (EventID) REFERENCES Event(EventID),
-CONSTRAINT Catering_FK_4 FOREIGN KEY (CardID) REFERENCES CardDetails(CardID),
-CONSTRAINT Catering_FK_5 FOREIGN KEY (TypesOfCateringID) REFERENCES TypesOfCatering(TypesOfCateringID));
+CREATE TABLE "Catering" ( /* Creates a table with the name that is inside the "" */
+CateringID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+UserID integer NOT NULL, /* Creates a row that is an integer and is not null */
+MealID integer NOT NULL, /* Creates a row that is an integer and is not null */
+EventID integer NOT NULL, /* Creates a row that is an integer and is not null */
+CardID integer NOT NULL, /* Creates a row that is an integer and is not null */
+TypesOfCateringID integer NOT NULL, /* Creates a row that is an integer and is not null */
+SpecificCateringRequests text NOT NULL, /* Creates a row that is a text and is not null */
+CONSTRAINT Catering_FK_1 FOREIGN KEY (UserID) REFERENCES User(UserID), /* Sets a foreign key */
+CONSTRAINT Catering_FK_2 FOREIGN KEY (MealID) REFERENCES Meals(MealID), /* Sets a foreign key */
+CONSTRAINT Catering_FK_3 FOREIGN KEY (EventID) REFERENCES Event(EventID), /* Sets a foreign key */
+CONSTRAINT Catering_FK_4 FOREIGN KEY (CardID) REFERENCES CardDetails(CardID), /* Sets a foreign key */
+CONSTRAINT Catering_FK_5 FOREIGN KEY (TypesOfCateringID) REFERENCES TypesOfCatering(TypesOfCateringID)); /* Sets a foreign key */
 
-CREATE TABLE "EventMenu" (
-EventMenuID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-CateringID integer NOT NULL,
-MenuID integer NOT NULL,
-CONSTRAINT Catering_FK_1 FOREIGN KEY (CateringID) REFERENCES Catering(CateringID),
-CONSTRAINT Catering_FK_2 FOREIGN KEY (MenuID) REFERENCES Menu(MenuID));
+CREATE TABLE "EventMenu" ( /* Creates a table with the name that is inside the "" */
+EventMenuID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+CateringID integer NOT NULL, /* Creates a row that is an integer and is not null */
+MenuID integer NOT NULL, /* Creates a row that is an integer and is not null */
+CONSTRAINT Catering_FK_1 FOREIGN KEY (CateringID) REFERENCES Catering(CateringID), /* Sets a foreign key */
+CONSTRAINT Catering_FK_2 FOREIGN KEY (MenuID) REFERENCES Menu(MenuID)); /* Sets a foreign key */
 
-CREATE TABLE "EventDietaryRequirements" (
-EventDietaryRequirementsID integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-DietaryTypesID integer NOT NULL,
-CateringID integer NOT NULL,
-Qty integer NOT NULL,
-CONSTRAINT EventDietaryRequirements_FK_1 FOREIGN KEY (DietaryTypesID) REFERENCES DietaryTypes(DietaryTypesID),
-CONSTRAINT EventDietaryRequirements_FK_2 FOREIGN KEY (CateringID) REFERENCES Catering(CateringID));
+CREATE TABLE "EventDietaryRequirements" ( /* Creates a table with the name that is inside the "" */
+EventDietaryRequirementsID integer PRIMARY KEY AUTOINCREMENT NOT NULL, /* Creates a primary key that is an integer, autoicrements and in not null */
+DietaryTypesID integer NOT NULL, /* Creates a row that is an integer and is not null */
+CateringID integer NOT NULL, /* Creates a row that is an integer and is not null */
+Qty integer NOT NULL, /* Creates a row that is an integer and is not null */
+CONSTRAINT EventDietaryRequirements_FK_1 FOREIGN KEY (DietaryTypesID) REFERENCES DietaryTypes(DietaryTypesID), /* Sets a foreign key */
+CONSTRAINT EventDietaryRequirements_FK_2 FOREIGN KEY (CateringID) REFERENCES Catering(CateringID)); /* Sets a foreign key */
 
