@@ -11,7 +11,7 @@ connection = sqlite3.connect("Task_6_Database.db")
 # Defining variables to make it easier to change the size of everything
 standard_height = 30
 standard_width = 200
-standard_font = "", 18
+standard_font = "", 15
 standard_y_padding = 5
 standard_x_padding = 5
 
@@ -455,7 +455,7 @@ def requester_gui():
     main_frame = ctk.CTkFrame(root)
     main_frame.pack(fill="both", expand=True)
     main_frame.rowconfigure(0, weight=1)
-    main_frame.columnconfigure(0, weight=2)
+    main_frame.columnconfigure(0, weight=1)
     main_frame.columnconfigure(1, weight=1)
     main_frame.columnconfigure(2, weight=1)
 
@@ -612,14 +612,14 @@ def cattering_request(left_frame,middle_frame,right_frame):
 
     #Creates a ctk label
     label = ctk.CTkLabel(middle_frame, text="Select An Item Then Click The Button Bellow \nThe Box To Add/Remove It From The Order \n\nFORMAT = MenuID, ItemName", fg_color="transparent", font= standard_font)
-    label.grid(row = 0, column = 3, pady = 10)
+    label.grid(row = 0, column = 3)
 
     #Creating list box frame
     listbox_frame= ctk.CTkFrame(middle_frame, fg_color= "#292929")
-    listbox_frame.grid(row = 1, column = 3, pady = 10)
+    listbox_frame.grid(row = 1, column = 3)
 
     #Creates a listbox and inserts data from the database into it
-    menu_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    menu_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
     cursor = connection.cursor()
     data = cursor.execute("SELECT MenuID,ItemName FROM Menu").fetchall()
     for row in data:
@@ -647,7 +647,7 @@ def cattering_request(left_frame,middle_frame,right_frame):
     listboxFrameTwo.grid(row = 4, column = 3, pady = 10)
 
     #Creates a list box
-    event_menu_listbox = Listbox(listboxFrameTwo, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    event_menu_listbox = Listbox(listboxFrameTwo, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
     event_menu_listbox.pack(side=LEFT)
 
     #Creates a scroll bar
@@ -667,15 +667,15 @@ def cattering_request(left_frame,middle_frame,right_frame):
     remove_button.grid(row = 5, column = 3, pady = 10)
 
     #Creates a ctk label
-    label = ctk.CTkLabel(right_frame, text="Select An Item Then Click The Button Bellow \nThe Box To Add/Remove It From The Order \n\nFORMAT = DietaryTypesID, Name", fg_color="transparent", font= standard_font)
-    label.grid(row = 0, column = 4, pady = 10)
+    label = ctk.CTkLabel(right_frame, text="Select An Item Then Click The Button Bellow \nThe Box To Add/Remove It From The Order \nIf Dietary Type Isn't In List Contact Catering Staff  \n\nFORMAT = DietaryTypesID, Name", fg_color="transparent", font= standard_font)
+    label.grid(row = 0, column = 4)
 
     #Creating list box frame
     listbox_frame= ctk.CTkFrame(right_frame, fg_color= "#292929")
-    listbox_frame.grid(row = 1, column = 4, pady = 10)
+    listbox_frame.grid(row = 1, column = 4)
 
     #Creates a listbox and inserts data from the database into it
-    dietary_types_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    dietary_types_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
     cursor = connection.cursor()
     data = cursor.execute("SELECT DietaryTypesID,DietaryTypesName FROM DietaryTypes").fetchall()
     for row in data:
@@ -708,11 +708,14 @@ def cattering_request(left_frame,middle_frame,right_frame):
         )
     add_button.grid(row = 3, column = 4, pady = 10)
 
+    label = ctk.CTkLabel(right_frame, text="FORMAT = DietaryTypesID, Name, Qty", fg_color="transparent", font= standard_font)
+    label.grid(row = 4, column = 4)
+
     #Creates a ctk frame
     listboxFrameTwo= ctk.CTkFrame(right_frame, fg_color= "#292929")
-    listboxFrameTwo.grid(row = 4, column = 4, pady = 10)
+    listboxFrameTwo.grid(row = 5, column = 4, pady = 10)
 
-    event_dietary_types_listbox = Listbox(listboxFrameTwo, bg= "#292929", fg= "Silver", width= 30, height= 10, font= standard_font)
+    event_dietary_types_listbox = Listbox(listboxFrameTwo, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
     event_dietary_types_listbox.pack(side=LEFT)
 
     listboxScrollbar= ctk.CTkScrollbar(listboxFrameTwo, command=event_dietary_types_listbox.yview)
@@ -728,7 +731,7 @@ def cattering_request(left_frame,middle_frame,right_frame):
         height= standard_height,
         command= lambda: remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry),
         )
-    remove_button.grid(row = 5, column = 4, pady = 10)
+    remove_button.grid(row = 6, column = 4, pady = 10)
  
 #Defines function that adds an item to a list box
 def add_item_menu(menu_listbox,event_menu_listbox):
