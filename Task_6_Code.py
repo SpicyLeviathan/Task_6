@@ -27,6 +27,232 @@ screen_height = root.winfo_screenheight()
 root.geometry(f"500x275")
 root.resizable(False, False)
 
+class ErrorWindow:
+    #Defines all variables in the class
+    def __init__(self, parent, message, on_close):
+        self.parent = parent
+        self.message = message
+        self.on_close = on_close
+        self.error_window = None
+
+    #Methad that creates the error window
+    def create(self):
+        #Creates a new window
+        self.error_window = ctk.CTkToplevel(self.parent)
+        self.error_window.title("Error")
+        self.error_window.resizable(False, False)
+
+        #Make the window modal
+        self.error_window.grab_set()
+        
+        #Make it transient to the main window
+        self.error_window.transient(self.parent)
+
+        #Creates a label
+        error_label = ctk.CTkLabel(
+            self.error_window,
+            text=self.message,
+            font=standard_font)
+        error_label.pack(pady=standard_y_padding)
+
+        #Checks if variable contains a value
+        if self.on_close == "N/A":
+            #Creates a button
+            close_button = ctk.CTkButton(
+                self.error_window,
+                text="Close",
+                font=standard_font,
+                width=standard_width,
+                height=standard_height,
+                command=self.close_error_window)
+            close_button.pack(pady=standard_y_padding)
+        else:  
+            #Creates a button
+            close_button = ctk.CTkButton(
+                self.error_window,
+                text="Close",
+                font=standard_font,
+                width=standard_width,
+                height=standard_height,
+                command=self.close_error_window_with_callback)
+            close_button.pack(pady=standard_y_padding)
+
+        #Center the window on the parent
+        self.center_window()
+
+        #Wait for the window to be closed
+        self.parent.wait_window(self.error_window)
+
+    #Defines the method that closes the error window
+    def close_error_window(self):
+        self.error_window.destroy()
+
+    #Defines the method that closes the error window and runs the onther command.
+    def close_error_window_with_callback(self):
+        self.error_window.destroy()
+        self.on_close()
+
+    #Defines the method that centers the error window ontop of the main program
+    def center_window(self):
+        self.error_window.update_idletasks()
+        width = self.error_window.winfo_width()
+        height = self.error_window.winfo_height()
+        x = self.parent.winfo_x() + (self.parent.winfo_width() // 2) - (width // 2)
+        y = self.parent.winfo_y() + (self.parent.winfo_height() // 2) - (height // 2)
+        self.error_window.geometry(f'+{x}+{y}')
+
+#Creates a class that handles credentials
+class CredentialsChecker:
+    #Defines all the variables in the class
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    #Defines the method that checks if the username is valid
+    def username_checker(self):
+        usernames = str(connection.cursor().execute("SELECT Username FROM User").fetchall()).replace("(","").replace(")","").replace("'","").replace(",","").replace("[","").replace("]","").replace(" ",",")
+        usernames = usernames.split(",")
+        username_in_usernames = False
+        for item in usernames:
+            if self.username == item:
+                username_in_usernames = True
+                break
+        return username_in_usernames           
+    #Defines the method that checks if the password is valid
+    def password_checker(self):
+        database_password = connection.cursor().execute(f"SELECT Password FROM User WHERE Username= '{self.username}'").fetchone()[0]
+        if self.password != database_password:
+            correct_password = False
+            return correct_password
+        else:
+            correct_password = True
+            return correct_password
+
+#Defines the function that contains the code to start the program.
+def main(button_type): 
+    #Clears all widgits
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    #Sets the variable to False
+    valid_login = False
+
+    #Checks if the log in button has been pressed yet
+    if button_type == None:
+        #Calls the function to create the log in gui
+        log_in_window()
+    else:
+        #Makes the username a global variable
+        global username
+
+        #Gets all the information attached to the button
+        button_value = button_type[0]
+        username = button_type[1]
+        password = button_type[2]
+
+        #Creates items for the classes
+        credentials_checker_1 = CredentialsChecker(username, password)
+        credentials_checker_2 = CredentialsChecker(username, password)
+        error_window_1 = ErrorWindow(root, "Your password or username was incorect.\nPlease go back and try again.", lambda: log_in_window())
+        error_window_2 = ErrorWindow(root, "We encountered a problem, please try again.", lambda: log_in_window())
+
+        #Checks if was a valid login. If it was it will set the value to True
+        if button_value == "login":
+            if credentials_checker_1.username_checker() == True:
+                if credentials_checker_2.password_checker() == True:
+                    valid_login = True
+                else:
+                    error_window_1.create()
+            else:
+                error_window_1.create()
+        else:
+            error_window_2.create()
+
+    #Checks if was a valid login 
+    if valid_login == True:
+        #Gathers required information
+        account_type_ID = int(account_type_ID_retreval(username))
+
+        #Modifies the window to be full screen
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        root.geometry(f"{screen_width}x{screen_height}")
+        root.resizable(True, True)
+
+        #Launches the correct gui bassed off of the account type
+        if account_type_ID == 1:
+            catterer_gui()
+        elif account_type_ID == 2:
+            requester_gui()
+        else:
+            deactivated_account()
+
+#Defines a function that is used to display all events
+def events(left_frame,right_frame):
+    #Clears all widgits
+    for widgets in left_frame.winfo_children():
+        widgets.destroy()
+    for widgets in right_frame.winfo_children():
+        widgets.destroy()
+
+    #Extracting data from the data base
+    data=[]
+    cursor = connection.cursor()
+    data = cursor.execute("""
+        SELECT
+            Catering.CateringID AS Catering_ID,
+            Event.EventName AS Event_Name,
+            User.FirstName ||' '|| User.LastName AS Requester,
+            Meals.MealName AS Meal,
+            Catering.CardID AS Card_ID,
+            TypesOfCatering.TypesOfCateringName AS Type_Of_Catering,
+            Catering.SpecificCateringRequests AS Specific_Catering_Requests
+        FROM Catering
+        JOIN "User"
+        ON User.UserID = Catering.UserID 
+        JOIN Meals
+        ON Meals.MealID = Catering.MealID
+        JOIN Event
+        ON Event.EventID = Catering.EventID
+        JOIN TypesOfCatering
+        ON TypesOfCatering.TypesOfCateringID = Catering.TypesOfCateringID;""").fetchall()
+
+    #Creating a table to display the data
+    treeview_frame= ctk.CTkFrame(right_frame, fg_color= "#292929")
+    treeview_frame.pack()
+
+    ttk.Style().theme_use("clam")
+    ttk.Style().configure("Treeview", background="#292929",foreground="White", fieldbackground="#292929")
+    ttk.Style().configure('Treeview.Heading', background='#292929', foreground='White')
+
+    columns = ("CateringID", "Event_Name", "Requester_Name", "Meal", "CardID", "Specific_Requests", "Specific_Requests")
+    events_treeview = ttk.Treeview(treeview_frame, columns=columns, show="headings", height= 40)
+
+    events_treeview.column("# 1",anchor=W, stretch=True, width = 100)
+    events_treeview.heading("# 1", text="CateringID")
+    events_treeview.column("# 2", anchor=W, stretch=True,width = 200)
+    events_treeview.heading("# 2", text="Event_Name")
+    events_treeview.column("# 3", anchor=W, stretch=True,width = 200)
+    events_treeview.heading("# 3", text="Requester_Name")
+    events_treeview.column("# 4", anchor=W, stretch=True,width = 200)
+    events_treeview.heading("# 4", text="Meal")
+    events_treeview.column("# 5", anchor=W, stretch=True,width = 100)
+    events_treeview.heading("# 5", text="CardID")
+    events_treeview.column("# 6", anchor=W, stretch=True,width = 150)
+    events_treeview.heading("# 6", text="Type_Of_Catering")
+    events_treeview.column("# 7", anchor=W, stretch=True,width = 400)
+    events_treeview.heading("# 7", text="Specific_Requests")
+
+    #Entering the data into the table
+    for row in data:
+        events_treeview.insert("", "end", values=row)
+
+    #Adding a scroll bar
+    treeviewScrollbarY= ttk.Scrollbar(treeview_frame, command=events_treeview.yview)
+    treeviewScrollbarY.pack(side=LEFT, fill=Y)
+    events_treeview.config(yscrollcommand=treeviewScrollbarY.set)
+    events_treeview.pack(side=RIGHT)
+
 #Creating all the login widgits
 def log_in_window():
 
@@ -116,72 +342,6 @@ def catterer_gui():
     events_menu.add_command(label='Event Dietary Requirements', command= lambda: select_event_dietary_requirements(left_frame,right_frame))
     menu_bar.add_cascade(label="Exit", menu=exit_menu)
     menu_bar.add_cascade(label="Event", menu=events_menu)
-
-#Defines a function that is used to display all events
-def events(left_frame,right_frame):
-    #Clears all widgits
-    for widgets in left_frame.winfo_children():
-        widgets.destroy()
-    for widgets in right_frame.winfo_children():
-        widgets.destroy()
-
-    #Extracting data from the data base
-    data=[]
-    cursor = connection.cursor()
-    data = cursor.execute("""
-        SELECT
-            Catering.CateringID AS Catering_ID,
-            Event.EventName AS Event_Name,
-            User.FirstName ||' '|| User.LastName AS Requester,
-            Meals.MealName AS Meal,
-            Catering.CardID AS Card_ID,
-            TypesOfCatering.TypesOfCateringName AS Type_Of_Catering,
-            Catering.SpecificCateringRequests AS Specific_Catering_Requests
-        FROM Catering
-        JOIN "User"
-        ON User.UserID = Catering.UserID 
-        JOIN Meals
-        ON Meals.MealID = Catering.MealID
-        JOIN Event
-        ON Event.EventID = Catering.EventID
-        JOIN TypesOfCatering
-        ON TypesOfCatering.TypesOfCateringID = Catering.TypesOfCateringID;""").fetchall()
-
-    #Creating a table to display the data
-    treeview_frame= ctk.CTkFrame(right_frame, fg_color= "#292929")
-    treeview_frame.pack()
-
-    ttk.Style().theme_use("clam")
-    ttk.Style().configure("Treeview", background="#292929",foreground="White", fieldbackground="#292929")
-    ttk.Style().configure('Treeview.Heading', background='#292929', foreground='White')
-
-    columns = ("CateringID", "Event_Name", "Requester_Name", "Meal", "CardID", "Specific_Requests", "Specific_Requests")
-    events_treeview = ttk.Treeview(treeview_frame, columns=columns, show="headings", height= 40)
-
-    events_treeview.column("# 1",anchor=W, stretch=True, width = 100)
-    events_treeview.heading("# 1", text="CateringID")
-    events_treeview.column("# 2", anchor=W, stretch=True,width = 200)
-    events_treeview.heading("# 2", text="Event_Name")
-    events_treeview.column("# 3", anchor=W, stretch=True,width = 200)
-    events_treeview.heading("# 3", text="Requester_Name")
-    events_treeview.column("# 4", anchor=W, stretch=True,width = 200)
-    events_treeview.heading("# 4", text="Meal")
-    events_treeview.column("# 5", anchor=W, stretch=True,width = 100)
-    events_treeview.heading("# 5", text="CardID")
-    events_treeview.column("# 6", anchor=W, stretch=True,width = 150)
-    events_treeview.heading("# 6", text="Type_Of_Catering")
-    events_treeview.column("# 7", anchor=W, stretch=True,width = 400)
-    events_treeview.heading("# 7", text="Specific_Requests")
-
-    #Entering the data into the table
-    for row in data:
-        events_treeview.insert("", "end", values=row)
-
-    #Adding a scroll bar
-    treeviewScrollbarY= ttk.Scrollbar(treeview_frame, command=events_treeview.yview)
-    treeviewScrollbarY.pack(side=LEFT, fill=Y)
-    events_treeview.config(yscrollcommand=treeviewScrollbarY.set)
-    events_treeview.pack(side=RIGHT)
 
 #Defines a function that lets you select events to view
 def select_event_menu(left_frame,right_frame):
@@ -403,7 +563,8 @@ def show_event(right_frame,events_listbox):
         INNER JOIN User
         ON User.UserID = Catering.UserID 
         INNER JOIN Event
-        ON Event.EventID = Catering.EventID;""").fetchall()
+        ON Event.EventID = Catering.EventID
+        WHERE Event.EventID = {eventID};""").fetchall()
     
     #Creates a table to display the data
     treeview_frame= ctk.CTkFrame(right_frame, fg_color= "#292929")
@@ -599,6 +760,10 @@ def cattering_request(left_frame,middle_frame,right_frame):
         )
     cattering_requirements_entry.grid(row = 8, column = 1, sticky = W, pady = 10)
 
+    #Creates a label
+    confirm_label = ctk.CTkLabel(left_frame, text="WHEN DONE CLICK \nTHIS BUTTON", fg_color="transparent", font=("",20))
+    confirm_label.grid(row = 9, column = 0, pady = 200)
+
     #Creating a button
     confirm_button = ctk.CTkButton(
         left_frame,
@@ -606,9 +771,9 @@ def cattering_request(left_frame,middle_frame,right_frame):
         font= standard_font,
         width= standard_width,
         height= standard_height,
-        command= lambda: confirm_request(event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox),
+        command= lambda: data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox),
         )
-    confirm_button.grid(row = 9, column = 0, pady = 150)
+    confirm_button.grid(row = 9, column = 1, pady = 200)
 
     #Creates a ctk label
     label = ctk.CTkLabel(middle_frame, text="Select An Item Then Click The Button Bellow \nThe Box To Add/Remove It From The Order \n\nFORMAT = MenuID, ItemName", fg_color="transparent", font= standard_font)
@@ -735,6 +900,9 @@ def cattering_request(left_frame,middle_frame,right_frame):
  
 #Defines function that adds an item to a list box
 def add_item_menu(menu_listbox,event_menu_listbox):
+    
+    error_window_3 = ErrorWindow(root, "You did not make a selection, please try again.", "N/A")
+
     #Gets the user selection
     selection = menu_listbox.curselection()
 
@@ -744,10 +912,15 @@ def add_item_menu(menu_listbox,event_menu_listbox):
         item = str(menu_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
         event_menu_listbox.insert(END, f"{item}")
         menu_listbox.delete(selection[0])
+    else:
+        error_window_3.create()
 
 #Defines function that removes an item from a list box
 def remove_item_menu(menu_listbox,event_menu_listbox):
-    #Gets the user selection
+    #Creates an item for the errorwindow class
+    error_window_4 = ErrorWindow(root, "You did not make a selection, please try again.", "N/A")
+
+    # Gets the user selection
     selection = event_menu_listbox.curselection()
 
     #Checks if their is a selection
@@ -756,14 +929,27 @@ def remove_item_menu(menu_listbox,event_menu_listbox):
         item = str(event_menu_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
         menu_listbox.insert(END, f"{item}")
         event_menu_listbox.delete(selection[0])
+    else:
+        error_window_4.create()
 
 #Defines function that adds an item to a list box
 def add_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry):
+    #Creates an item for the errorwindow class
+    error_window_5 = ErrorWindow(root, "You did not make a selection, please try again.", "N/A")
+    error_window_6 = ErrorWindow(root, "Your qty was not an integer, please try again.", "N/A")
+
     #Gets the user selection
     selection = dietary_types_listbox.curselection()
 
     #Checks if their is a selection
     if selection:
+        
+        #Checks if value is an integer
+        try:
+            qty = int(qty_entry.get())
+        except ValueError:
+            error_window_6.create()
+
         #Gets required information
         qty = str(qty_entry.get())
         item = str(dietary_types_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
@@ -772,9 +958,14 @@ def add_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry
         #Inserts it into one list box and deletes it from the other
         event_dietary_types_listbox.insert(END, f"{item}")
         dietary_types_listbox.delete(selection[0])
+    else:
+        error_window_5.create()
 
 #Defines function that removes an item from a list box
-def remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry):
+def remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox):
+    #Creates an item for the errorwindow class
+    error_window_7 = ErrorWindow(root, "You did not make a selection, please try again.", "N/A")
+    
     #Gets the user selection
     selection = event_dietary_types_listbox.curselection()
 
@@ -790,19 +981,160 @@ def remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_en
         #Inserts it into one list box and deletes it from the other
         dietary_types_listbox.insert(END, f"{item}")
         event_dietary_types_listbox.delete(selection[0])
+    else:
+        error_window_7.create()
+
+#Defines function that checks all the data validation
+def data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox):
+    #Creates an item for the errorwindow class
+    error_window_8 = ErrorWindow(root, "Value error, please try again.", "N/A")
+
+    validity = True
+
+    #Checks if value is a string
+    try:
+        event_name = str(event_name_entry.get())
+    except ValueError:
+        validity = False
+        error_window_8.create()
+
+    #Checks if value is an integer
+    try:
+        number_of_people = int(number_of_people_entry.get())
+    except ValueError:
+        validity = False
+        error_window_8.create()
+
+    #Checks if a value is a string
+    try:
+        cattering_requirements = str(cattering_requirements_entry.get())
+    except ValueError:
+        validity = False
+        error_window_8.create()
+
+    #does a final check if data is valid
+    if validity == True:
+        #Formats date and time
+        day = str(day_dropdown.get())
+        month = str(month_dropdown.get())
+        year = str(year_dropdown.get())
+        date = year + "-" + month + "-" + day
+        minute = str(minute_dropdown.get())
+        hour = str(hour_dropdown.get())
+        time = hour + ":" + minute
+
+        #Calls Function
+        are_you_sure(left_frame,middle_frame,right_frame,event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox)
+    else:
+        #Runs item through class
+        error_window_8.create()
+
+def are_you_sure(left_frame,middle_frame,right_frame,event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox):
+    #Clears all widgits
+    for widget in left_frame.winfo_children():
+        widget.destroy()
+    for widget in middle_frame.winfo_children():
+        widget.destroy()
+    for widget in right_frame.winfo_children():
+        widget.destroy()
+    
+    #Creates a label
+    event_name_label = ctk.CTkLabel(left_frame, text=f"Event Name Is: {event_name}", font= standard_font)
+    event_name_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creates a label
+    number_of_people_label = ctk.CTkLabel(left_frame, text=f"Number Of People Is: {number_of_people}", font= standard_font)
+    number_of_people_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creates a label
+    date_label = ctk.CTkLabel(left_frame, text=f"Event Date Is: {date}", font= standard_font)
+    date_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creates a label
+    time_label = ctk.CTkLabel(left_frame, text=f"Event Time Is: {time}", font= standard_font)
+    time_label.grid(row = 0, column = 0, pady = 10)
+    
+    #Creates a label
+    type_of_catering_label = ctk.CTkLabel(left_frame, text=f"Type of catering is: {type_of_catering_dropdown}", font= standard_font)
+    type_of_catering_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creates a label
+    catering_for_label = ctk.CTkLabel(left_frame, text=f"Catering For: {cattering_for_dropdown}", font= standard_font)
+    catering_for_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creates a label
+    special_catering_requirements_label = ctk.CTkLabel(left_frame, text=f"Special Catering Requirements: {cattering_requirements}", font= standard_font)
+    special_catering_requirements_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creates a label
+    menu_items_label = ctk.CTkLabel(middle_frame, text="Menu Items Are:", font= standard_font)
+    menu_items_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creating list box frame
+    listbox_frame= ctk.CTkFrame(middle_frame, fg_color= "#292929")
+    listbox_frame.grid(row = 1, column = 3)
+
+    #Getting data from old list box
+    data = event_menu_listbox.get(0, END)
+
+    #Creates a listbox and inserts data from the old listbox into it
+    event_menu_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
+    for row in data:
+        event_menu_listbox.insert(END, row)
+    event_menu_listbox.pack(side=LEFT)
+
+    #Creates a scroll bar
+    listboxScrollbar= ctk.CTkScrollbar(listbox_frame, command=event_menu_listbox.yview)
+    listboxScrollbar.pack(side="right", fill=Y)
+    event_menu_listbox.config(yscrollcommand=listboxScrollbar.set)
+
+    #Creates a label
+    dietary_requirements_label = ctk.CTkLabel(middle_frame, text="Dietary Requirements Are:", font= standard_font)
+    dietary_requirements_label.grid(row = 0, column = 0, pady = 10)
+
+    #Creating list box frame
+    listbox_frame_two= ctk.CTkFrame(middle_frame, fg_color= "#292929")
+    listbox_frame_two.grid(row = 1, column = 3)
+
+    #Gets data from old listbox
+    data_two = event_dietary_types_listbox.get(0, END)
+
+    #Creates a listbox and inserts data from the old listbox into it
+    event_dietary_types_listbox = Listbox(listbox_frame_two, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
+    for row in data_two:
+        event_menu_listbox.insert(END, row)
+    event_dietary_types_listbox.pack(side=LEFT)
+
+    #Creates a scroll bar
+    listboxScrollbar= ctk.CTkScrollbar(listbox_frame_two, command=event_menu_listbox.yview)
+    listboxScrollbar.pack(side="right", fill=Y)
+    event_menu_listbox.config(yscrollcommand=listboxScrollbar.set)
+
+    #Creating a button
+    remove_button = ctk.CTkButton(
+        right_frame,
+        text= "Remove Item",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: cattering_request(left_frame,middle_frame,right_frame),
+        )
+    remove_button.grid(row = 6, column = 4, pady = 10)
+
+    #Creating a button
+    remove_button = ctk.CTkButton(
+        right_frame,
+        text= "Remove Item",
+        font= standard_font,
+        width= standard_width,
+        height= standard_height,
+        command= lambda: confirm_request(event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox)
+        )
+    remove_button.grid(row = 6, column = 4, pady = 10)
 
 #Defines function that adds the new information to the database
-def confirm_request(event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox):
+def confirm_request(event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox):
     #Gathers all the required information and formats it.
-    event_name = str(event_name_entry.get())
-    number_of_people = str(number_of_people_entry.get())
-    day = str(day_dropdown.get())
-    month = str(month_dropdown.get())
-    year = str(year_dropdown.get())
-    date = year + "-" + month + "-" + day
-    minute = str(minute_dropdown.get())
-    hour = str(hour_dropdown.get())
-    time = hour + ":" + minute
     type_of_catering = str(type_of_catering_dropdown.get())
     if type_of_catering == "On Sight-Catering":
         type_of_catering = 1
@@ -819,7 +1151,6 @@ def confirm_request(event_name_entry,number_of_people_entry,day_dropdown,month_d
         catering_for = 4
     elif catering_for == "Dinner":
         catering_for = 5
-    cattering_requirements = str(cattering_requirements_entry.get())
     event_menu = event_menu_listbox.get(0, END)
     event_dietary_types = event_dietary_types_listbox.get(0, END)
 
@@ -889,123 +1220,6 @@ def deactivated_account():
         height=standard_height,
         command=root.destroy)
     close_button.pack(pady=standard_y_padding)
-
-#Creates a class that manages error windows
-class ErrorWindow:
-    #Defines all variables in the class
-    def __init__(self,parent,message,on_close):
-        self.parent = parent
-        self.message = message
-        self.on_close = on_close
-
-    #Defines the method that creates the error window
-    def create(self):
-        #Clears all widgits
-        for widget in root.winfo_children():
-            widget.destroy()
-        
-        #Creates a label
-        error_label = ctk.CTkLabel(
-            self.parent,
-            text=self.message,
-            font=standard_font)
-        error_label.pack(pady=standard_y_padding)
-
-        #Creates a button
-        close_button = ctk.CTkButton(
-            self.parent,
-            text="Close",
-            font=standard_font,
-            width=standard_width,
-            height=standard_height,
-            command=lambda: main(button_type = None))
-        close_button.pack(pady=standard_y_padding)
-
-#Creates a class that handles credentials
-class CredentialsChecker:
-    #Defines all the variables in the class
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-
-    #Defines the method that checks if the username is valid
-    def username_checker(self):
-        usernames = str(connection.cursor().execute("SELECT Username FROM User").fetchall()).replace("(","").replace(")","").replace("'","").replace(",","").replace("[","").replace("]","").replace(" ",",")
-        usernames = usernames.split(",")
-        username_in_usernames = False
-        for item in usernames:
-            if self.username == item:
-                username_in_usernames = True
-                break
-        return username_in_usernames           
-    #Defines the method that checks if the password is valid
-    def password_checker(self):
-        database_password = connection.cursor().execute(f"SELECT Password FROM User WHERE Username= '{self.username}'").fetchone()[0]
-        if self.password != database_password:
-            correct_password = False
-            return correct_password
-        else:
-            correct_password = True
-            return correct_password
-
-#Defines the function that contains the code to start the program.
-def main(button_type): 
-    #Clears all widgits
-    for widget in root.winfo_children():
-        widget.destroy()
-
-    #Sets the variable to False
-    valid_login = False
-
-    #Checks if the log in button has been pressed yet
-    if button_type == None:
-        #Calls the function to create the log in gui
-        log_in_window()
-    else:
-        #Makes the username a global variable
-        global username
-
-        #Gets all the information attached to the button
-        button_value = button_type[0]
-        username = button_type[1]
-        password = button_type[2]
-
-        #Creates items for the classes
-        credentials_checker_1 = CredentialsChecker(username, password)
-        credentials_checker_2 = CredentialsChecker(username, password)
-        error_window_1 = ErrorWindow(root, "Your password or username was incorect.\nPlease go back and try again.", lambda: log_in_window())
-        error_window_2 = ErrorWindow(root, "We encountered a problem, please try again.", lambda: log_in_window())
-
-        #Checks if was a valid login. If it was it will set the value to True
-        if button_value == "login":
-            if credentials_checker_1.username_checker() == True:
-                if credentials_checker_2.password_checker() == True:
-                    valid_login = True
-                else:
-                    error_window_1.create()
-            else:
-                error_window_1.create()
-        else:
-            error_window_2.create()
-
-    #Checks if was a valid login 
-    if valid_login == True:
-        #Gathers required information
-        account_type_ID = int(account_type_ID_retreval(username))
-
-        #Modifies the window to be full screen
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-        root.geometry(f"{screen_width}x{screen_height}")
-        root.resizable(True, True)
-
-        #Launches the correct gui bassed off of the account type
-        if account_type_ID == 1:
-            catterer_gui()
-        elif account_type_ID == 2:
-            requester_gui()
-        else:
-            deactivated_account()
     
 #Launches the programs code
 if __name__ == "__main__":
