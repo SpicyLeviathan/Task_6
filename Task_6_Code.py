@@ -771,7 +771,7 @@ def cattering_request(left_frame,middle_frame,right_frame):
         font= standard_font,
         width= standard_width,
         height= standard_height,
-        command= lambda: data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox),
+        command= lambda: data_validation(event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox),
         )
     confirm_button.grid(row = 9, column = 1, pady = 200)
 
@@ -988,7 +988,7 @@ def remove_item_dietary(dietary_types_listbox,event_dietary_types_listbox):
         error_window_7.create()
 
 #Defines function that checks all the data validation
-def data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox):
+def data_validation(event_name_entry,number_of_people_entry,day_dropdown,month_dropdown,year_dropdown,minute_dropdown,hour_dropdown,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements_entry,event_menu_listbox,event_dietary_types_listbox):
     #Creates an item for the errorwindow class
     error_window_8 = ErrorWindow(root, "Value error, please try again.", "N/A")
 
@@ -1028,114 +1028,10 @@ def data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_
         time = hour + ":" + minute
 
         #Calls Function
-        are_you_sure(left_frame,middle_frame,right_frame,event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox)
+        confirm_request(event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox)
     else:
         #Runs item through class
         error_window_8.create()
-
-#Defines function that checks if you are sure you want to proceed
-def are_you_sure(left_frame,middle_frame,right_frame,event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox):
-    #Clears all widgits
-    for widget in left_frame.winfo_children():
-        widget.destroy()
-    for widget in middle_frame.winfo_children():
-        widget.destroy()
-    for widget in right_frame.winfo_children():
-        widget.destroy()
-    
-    #Creates a label
-    event_name_label = ctk.CTkLabel(left_frame, text=f"Event Name Is: {event_name}", font= standard_font)
-    event_name_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creates a label
-    number_of_people_label = ctk.CTkLabel(left_frame, text=f"Number Of People Is: {number_of_people}", font= standard_font)
-    number_of_people_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creates a label
-    date_label = ctk.CTkLabel(left_frame, text=f"Event Date Is: {date}", font= standard_font)
-    date_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creates a label
-    time_label = ctk.CTkLabel(left_frame, text=f"Event Time Is: {time}", font= standard_font)
-    time_label.grid(row = 0, column = 0, pady = 10)
-    
-    #Creates a label
-    type_of_catering_label = ctk.CTkLabel(left_frame, text=f"Type of catering is: {type_of_catering_dropdown}", font= standard_font)
-    type_of_catering_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creates a label
-    catering_for_label = ctk.CTkLabel(left_frame, text=f"Catering For: {cattering_for_dropdown}", font= standard_font)
-    catering_for_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creates a label
-    special_catering_requirements_label = ctk.CTkLabel(left_frame, text=f"Special Catering Requirements: {cattering_requirements}", font= standard_font)
-    special_catering_requirements_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creates a label
-    menu_items_label = ctk.CTkLabel(middle_frame, text="Menu Items Are:", font= standard_font)
-    menu_items_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creating list box frame
-    listbox_frame= ctk.CTkFrame(middle_frame, fg_color= "#292929")
-    listbox_frame.grid(row = 1, column = 3)
-
-    #Getting data from old list box
-    data = event_menu_listbox.get(0, END)
-
-    #Creates a listbox and inserts data from the old listbox into it
-    event_menu_listbox = Listbox(listbox_frame, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
-    for row in data:
-        event_menu_listbox.insert(END, row)
-    event_menu_listbox.pack(side=LEFT)
-
-    #Creates a scroll bar
-    listboxScrollbar= ctk.CTkScrollbar(listbox_frame, command=event_menu_listbox.yview)
-    listboxScrollbar.pack(side="right", fill=Y)
-    event_menu_listbox.config(yscrollcommand=listboxScrollbar.set)
-
-    #Creates a label
-    dietary_requirements_label = ctk.CTkLabel(middle_frame, text="Dietary Requirements Are:", font= standard_font)
-    dietary_requirements_label.grid(row = 0, column = 0, pady = 10)
-
-    #Creating list box frame
-    listbox_frame_two= ctk.CTkFrame(middle_frame, fg_color= "#292929")
-    listbox_frame_two.grid(row = 1, column = 3)
-
-    #Gets data from old listbox
-    data_two = event_dietary_types_listbox.get(0, END)
-
-    #Creates a listbox and inserts data from the old listbox into it
-    event_dietary_types_listbox = Listbox(listbox_frame_two, bg= "#292929", fg= "Silver", width= 30, height= 12, font= standard_font)
-    for row in data_two:
-        event_menu_listbox.insert(END, row)
-    event_dietary_types_listbox.pack(side=LEFT)
-
-    #Creates a scroll bar
-    listboxScrollbar= ctk.CTkScrollbar(listbox_frame_two, command=event_menu_listbox.yview)
-    listboxScrollbar.pack(side="right", fill=Y)
-    event_menu_listbox.config(yscrollcommand=listboxScrollbar.set)
-
-    #Creating a button
-    remove_button = ctk.CTkButton(
-        right_frame,
-        text= "Remove Item",
-        font= standard_font,
-        width= standard_width,
-        height= standard_height,
-        command= lambda: cattering_request(left_frame,middle_frame,right_frame),
-        )
-    remove_button.grid(row = 6, column = 4, pady = 10)
-
-    #Creating a button
-    remove_button = ctk.CTkButton(
-        right_frame,
-        text= "Remove Item",
-        font= standard_font,
-        width= standard_width,
-        height= standard_height,
-        command= lambda: confirm_request(event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox)
-        )
-    remove_button.grid(row = 6, column = 4, pady = 10)
 
 #Defines function that adds the new information to the database
 def confirm_request(event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox):
