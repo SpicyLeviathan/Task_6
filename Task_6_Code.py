@@ -445,20 +445,20 @@ def select_event_dietary_requirements(left_frame,right_frame):
     events_listbox.pack(side=LEFT)
 
     #Creates a scroll bar
-    listboxScrollbar= ctk.CTkScrollbar(listbox_frame, command=events_listbox.yview)
-    listboxScrollbar.pack(side="right", fill=Y)
-    events_listbox.config(yscrollcommand=listboxScrollbar.set) 
+    listbox_scrollbar= ctk.CTkScrollbar(listbox_frame, command=events_listbox.yview)
+    listbox_scrollbar.pack(side="right", fill=Y)
+    events_listbox.config(yscrollcommand=listbox_scrollbar.set) 
 
     #Creating a button
-    changeRankButton = ctk.CTkButton(
+    dietary_requirements_button = ctk.CTkButton(
         left_frame,
-        text= "View Event Menu",
+        text= "View Dietary Requirements",
         font= standard_font,
         width= standard_width,
         height= standard_height,
         command= lambda: event_dietary_requirements(right_frame,events_listbox),
         )
-    changeRankButton.pack(pady = standard_y_padding)
+    dietary_requirements_button.pack(pady = standard_y_padding)
 
 #Defines a function that shows all the dietary requirements for the selected event
 def event_dietary_requirements(right_frame,events_listbox):
@@ -944,16 +944,19 @@ def add_item_dietary(dietary_types_listbox,event_dietary_types_listbox,qty_entry
     #Checks if their is a selection
     if selection:
         
+        validity = True
         #Checks if value is an integer
         try:
             qty = int(qty_entry.get())
         except ValueError:
+            validity = False
             error_window_6.create()
 
-        #Gets required information
-        qty = str(qty_entry.get())
-        item = str(dietary_types_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
-        item = item + " " + qty
+        if validity == True:
+            #Gets required information
+            qty = str(qty_entry.get())
+            item = str(dietary_types_listbox.get(selection[0])).replace("(","").replace(",","").replace("'","").replace(")","")
+            item = item + " " + qty
 
         #Inserts it into one list box and deletes it from the other
         event_dietary_types_listbox.insert(END, f"{item}")
@@ -989,6 +992,7 @@ def data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_
     #Creates an item for the errorwindow class
     error_window_8 = ErrorWindow(root, "Value error, please try again.", "N/A")
 
+    #sets the value of the variable to True
     validity = True
 
     #Checks if value is a string
@@ -1029,6 +1033,7 @@ def data_validation(left_frame,middle_frame,right_frame,event_name_entry,number_
         #Runs item through class
         error_window_8.create()
 
+#Defines function that checks if you are sure you want to proceed
 def are_you_sure(left_frame,middle_frame,right_frame,event_name,number_of_people,date,time,type_of_catering_dropdown,cattering_for_dropdown,cattering_requirements,event_menu_listbox,event_dietary_types_listbox):
     #Clears all widgits
     for widget in left_frame.winfo_children():
